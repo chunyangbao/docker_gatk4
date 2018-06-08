@@ -2,10 +2,10 @@
 FROM broadinstitute/gatk:gatkbase-1.2.3
 ARG DRELEASE
 
-RUN git clone https://github.com/broadinstitute/gatk.git /gatk && cd /gatk && git checkout f4225b89a482d4e0b5a4f6542b1a59c392587516
-
+ADD . /gatk
 
 WORKDIR /gatk
+RUN git clone https://github.com/broadinstitute/gatk.git /gatk
 RUN /gatk/gradlew clean compileTestJava sparkJar localJar condaEnvironmentDefinition -Drelease=$DRELEASE
 
 WORKDIR /root
@@ -27,7 +27,7 @@ RUN echo "source activate gatk" > /root/run_unit_tests.sh && \
 WORKDIR /root
 RUN cp -r /root/run_unit_tests.sh /gatk
 RUN cp -r gatk.jar /gatk
-RUN Rscript /gatk/scripts/docker/gatkbase/install_R_packages.R
+RUN cp -r install_R_packages.R /gatk
 
 # Start GATK Python environment
 
