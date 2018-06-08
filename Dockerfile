@@ -2,10 +2,9 @@
 FROM broadinstitute/gatk:gatkbase-1.2.3
 ARG DRELEASE
 
-ADD . /gatk
+RUN git clone https://github.com/broadinstitute/gatk.git /gatk
 
 WORKDIR /gatk
-RUN git clone https://github.com/broadinstitute/gatk.git /gatk
 RUN /gatk/gradlew clean compileTestJava sparkJar localJar condaEnvironmentDefinition -Drelease=$DRELEASE
 
 WORKDIR /root
